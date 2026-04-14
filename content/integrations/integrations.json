@@ -5,11 +5,27 @@
     "name": "Adobe Premiere Pro",
     "description": "Industry-leading non-linear video editor with timeline import/export (beta)",
     "company": "Adobe",
-    "logo": "/integrations/adobe_logo.png",
+    "logo": "/integrations/adobe-premiere-pro/adobe_premiere_logo.png",
     "categories": [
       "Editor"
     ],
-    "media": [],
+    "media": [
+      {
+        "type": "image",
+        "url": "/integrations/adobe-premiere-pro/adobe_premiere_screenshot_1.png",
+        "isHero": true
+      },
+      {
+        "type": "image",
+        "url": "/integrations/adobe-premiere-pro/adobe_premiere_screenshot_2.png",
+        "isHero": false
+      },
+      {
+        "type": "image",
+        "url":"/integrations/adobe-premiere-pro/adobe_premiere_screenshot_3.png",
+        "isHero": false
+      }
+    ],
     "url": "https://www.adobe.com/products/premiere.html"
   },
   {
@@ -18,11 +34,17 @@
     "name": "Altera",
     "description": "Metadata Management tool for film and video production (coming soon)",
     "company": "Cine.dev",
-    "logo": "https://logo.clearbit.com/cine.dev",
+    "logo": "/integrations/altera/altera_logo.png",
     "categories": [
       "Management"
     ],
-    "media": [],
+    "media": [
+      {
+        "type": "image",
+        "url": "/integrations/altera/altera_screenshot_1.png",
+        "isHero": true
+      }
+    ],
     "url": "https://cine.dev/"
   },
   {
@@ -31,11 +53,22 @@
     "name": "AVID Media Composer",
     "description": "Professional non-linear editing system with timeline export (preview)",
     "company": "AVID",
-    "logo": "https://logo.clearbit.com/avid.com",
+    "logo": "/integrations/avid-media-composer/avid_media_composer_logo.png",
     "categories": [
       "Editor"
     ],
-    "media": [],
+    "media": [
+      {
+        "type": "image",
+        "url": "/integrations/avid-media-composer/avid_media_composer_screenshot_1.png",
+        "isHero": true
+      },
+      {
+        "type": "image",
+        "url": "/integrations/avid-media-composer/avid_media_composer_screenshot_2.png",
+        "isHero": false
+      }
+    ],
     "url": "https://www.avid.com/media-composer"
   },
   {
@@ -44,11 +77,17 @@
     "name": "Blender VSE IO",
     "description": "Blender Video Sequence Editor add-on for importing and exporting various editorial interchange formats",
     "company": "Superprod",
-    "logo": "https://logo.clearbit.com/superprod.fr",
+    "logo": "/integrations/blender-vse-io/blender_vse_io_logo.png",
     "categories": [
       "Plugin"
     ],
-    "media": [],
+    "media": [
+      {
+        "type": "image",
+        "url": "/integrations/blender-vse-io/blender_vse_io_screenshot_1.jpg",
+        "isHero": true
+      }
+    ],
     "url": "https://gitlab.com/superprod/stax_suite/vse_io"
   },
   {
@@ -87,11 +126,27 @@
     "name": "DaVinci Resolve",
     "description": "Professional color grading and editing software with OTIO and OTIOZ import/export support",
     "company": "Blackmagic Design",
-    "logo": "https://logo.clearbit.com/blackmagicdesign.com",
+    "logo": "/integrations/davinci-resolve/davinci_resolve_logo.png",
     "categories": [
       "Editor"
     ],
-    "media": [],
+    "media": [
+      {
+        "type": "image",
+        "url": "/integrations/davinci-resolve/davinci_resolve_screenshot_1.png",
+        "isHero": true
+      },
+      {
+        "type": "image",
+        "url": "/integrations/davinci-resolve/davinci_resolve_screenshot_2.png",
+        "isHero": false
+      },
+      {
+        "type": "image",
+        "url": "/integrations/davinci-resolve/davinci_resolve_screenshot_3.png",
+        "isHero": false
+      }
+    ],
     "url": "https://www.blackmagicdesign.com/products/davinciresolve"
   },
   {
@@ -100,11 +155,17 @@
     "name": "EditReader",
     "description": "Animatic and animation production timeline manager that tracks timeline changes. Supports OTIO input and output",
     "company": "EditReader",
-    "logo": "https://logo.clearbit.com/editreader.co.uk",
+    "logo": "/integrations/editreader/editreader_logo.jpg",
     "categories": [
       "Management"
     ],
-    "media": [],
+    "media": [
+      {
+        "type": "image",
+        "url": "/integrations/editreader/editreader_screenshot_1.jpg",
+        "isHero": true
+      }
+    ],
     "url": "http://www.editreader.co.uk/"
   },
   {
@@ -113,12 +174,23 @@
     "name": "ftrack cineSync Play",
     "description": "Frame-accurate playback and review tool",
     "company": "ftrack",
-    "logo": "https://logo.clearbit.com/ftrack.com",
+    "logo": "/integrations/ftrack-cinesync-play/cinesync_play_icon.png",
     "categories": [
       "Player",
       "Review"
     ],
-    "media": [],
+    "media": [
+      {
+        "type": "image",
+        "url": "/integrations/ftrack-cinesync-play/cinesync_play_screenshot_1.png",
+        "isHero": true
+      },
+      {
+        "type": "image",
+        "url": "/integrations/ftrack-cinesync-play/cinesync_play_screenshot_2.png",
+        "isHero": false
+      }
+    ],
     "url": "https://www.ftrack.com/en/cinesync-play"
   },
   {
@@ -127,12 +199,23 @@
     "name": "Hiero",
     "description": "Multi-shot management, conform, editorial, review and distribution workflows tool",
     "company": "The Foundry",
-    "logo": "https://logo.clearbit.com/foundry.com",
+    "logo": "/integrations/hiero/hiero_logo.png",
     "categories": [
       "Management",
       "Review"
     ],
-    "media": [],
+    "media": [
+      {
+        "type": "image",
+        "url": "/integrations/hiero/hiero_screenshot_1.png",
+        "isHero": true
+      },
+      {
+        "type": "image",
+        "url": "/integrations/nuke-studio/nuke_studio_screenshot_2.png",
+        "isHero": false
+      }
+    ],
     "url": "https://www.foundry.com/products/nuke-family/hiero"
   },
   {
@@ -154,11 +237,17 @@
     "name": "Kdenlive",
     "description": "KDE Non-Linear Video Editor with OTIO support since version 20.04",
     "company": "KDE",
-    "logo": "https://logo.clearbit.com/kdenlive.org",
+    "logo": "/integrations/kdenlive/kdenlive_logo.png",
     "categories": [
       "Editor"
     ],
-    "media": [],
+    "media": [
+      {
+        "type": "image",
+        "url": "/integrations/kdenlive/kdenlive_screenshot_1.webp",
+        "isHero": true
+      }
+    ],
     "url": "https://kdenlive.org/en/about/"
   },
   {
@@ -167,11 +256,17 @@
     "name": "Magla",
     "description": "SQL-powered data pipeline for animation and VFX with dynamically generated OTIO timelines",
     "company": "Magnetic Lab",
-    "logo": "",
+    "logo": "/integrations/magla/magla_logo.png",
     "categories": [
       "Pipeline"
     ],
-    "media": [],
+    "media": [
+      {
+        "type": "image",
+        "url": "/integrations/magla/magla_screenshot_1.png",
+        "isHero": true
+      }
+    ],
     "url": "https://github.com/magnetic-lab/magla"
   },
   {
@@ -180,12 +275,23 @@
     "name": "Matchbox",
     "description": "Change Management solution for post production - compares reels and finds every cut change and VFX tweak",
     "company": "The Cargo Cult",
-    "logo": "https://logo.clearbit.com/thecargocult.nz",
+    "logo": "/integrations/matchbox/matchbox_logo.png",
     "categories": [
       "Management",
       "Review"
     ],
-    "media": [],
+    "media": [
+      {
+        "type": "image",
+        "url": "/integrations/matchbox/matchbox_screenshot_1.png",
+        "isHero": true
+      },
+      {
+        "type": "image",
+        "url": "/integrations/matchbox/matchbox_screenshot_2.png",
+        "isHero": false
+      }
+    ],
     "url": "https://www.thecargocult.nz/products/matchbox"
   },
   {
@@ -207,12 +313,18 @@
     "name": "mrViewer",
     "description": "Flipbook, video and audio player with OTIO support",
     "company": "mrViewer",
-    "logo": "https://logo.clearbit.com/sourceforge.net",
+    "logo": "/integrations/mrviewer/mrviewer_logo.png",
     "categories": [
       "Player",
       "Review"
     ],
-    "media": [],
+    "media": [
+      {
+        "type": "image",
+        "url": "/integrations/mrviewer/mrviewer_screenshot_1.png",
+        "isHero": true
+      }
+    ],
     "url": "https://mrviewer.sourceforge.io/"
   },
   {
@@ -221,12 +333,23 @@
     "name": "Nuke Studio",
     "description": "Multi-shot management, editorial and compositing tool",
     "company": "The Foundry",
-    "logo": "https://logo.clearbit.com/foundry.com",
+    "logo": "/integrations/nuke-studio/nuke_studio_logo.png",
     "categories": [
       "Editor",
       "Compositor"
     ],
-    "media": [],
+    "media": [
+      {
+        "type": "image",
+        "url": "/integrations/nuke-studio/nuke_studio_screenshot_1.png",
+        "isHero": true
+      },
+      {
+        "type": "image",
+        "url": "/integrations/nuke-studio/nuke_studio_screenshot_2.png",
+        "isHero": false
+      }
+    ],
     "url": "https://www.foundry.com/products/nuke-family/nuke-studio"
   },
   {
@@ -235,11 +358,17 @@
     "name": "Olive",
     "description": "Free open-source non-linear video editor with OTIO import and export support",
     "company": "Olive Team",
-    "logo": "https://logo.clearbit.com/olivevideoeditor.org",
+    "logo": "/integrations/olive/olive_logo.png",
     "categories": [
       "Editor"
     ],
-    "media": [],
+    "media": [
+      {
+        "type": "image",
+        "url": "/integrations/olive/olive_screenshot_1.png",
+        "isHero": false
+      }
+    ],
     "url": "https://olivevideoeditor.org/"
   },
   {
@@ -248,12 +377,18 @@
     "name": "OpenRV",
     "description": "Open source digital review tool for film, TV, and games",
     "company": "Academy Software Foundation",
-    "logo": "https://logo.clearbit.com/aswf.io",
+    "logo": "/integrations/openrv/openrv_logo.png",
     "categories": [
       "Player",
       "Review"
     ],
-    "media": [],
+    "media": [
+      {
+        "type": "image",
+        "url": "/integrations/openrv/openrv_screenshot_1.jpg",
+        "isHero": false
+      }
+    ],
     "url": "https://github.com/AcademySoftwareFoundation/OpenRV"
   },
   {
@@ -379,14 +514,14 @@
     "name": "raven",
     "description": "Desktop app for MacOS, Windows, Linux, and web for inspecting OTIO files",
     "company": "OpenTimelineIO",
-    "logo": "/integrations/raven-logo.jpg",
+    "logo": "/integrations/raven/raven-logo.jpg",
     "categories": [
       "Inspector"
     ],
     "media": [
       {
         "type": "image",
-        "url": "/integrations/raven-media-1.png",
+        "url": "/integrations/raven/raven-media-1.png",
         "isHero": true
       }
     ],
@@ -411,12 +546,23 @@
     "name": "RV",
     "description": "Commercial version of OpenRV - digital review tool for film, TV, and games",
     "company": "ShotGrid",
-    "logo": "https://logo.clearbit.com/shotgridsoftware.com",
+    "logo": "/integrations/rv/rv_logo.png",
     "categories": [
       "Player",
       "Review"
     ],
-    "media": [],
+    "media": [
+      {
+        "type": "image",
+        "url": "/integrations/rv/rv_screenshot_1.png",
+        "isHero": true
+      },
+      {
+        "type": "image",
+        "url": "/integrations/rv/rv_screenshot_2.png",
+        "isHero": false
+      }
+    ],
     "url": "https://www.shotgridsoftware.com/rv/"
   },
   {
@@ -438,11 +584,17 @@
     "name": "Shot Manager",
     "description": "Blender Add-on from Ubisoft for shot management workflows",
     "company": "Ubisoft",
-    "logo": "https://logo.clearbit.com/ubisoft.com",
+    "logo": "/integrations/shotmanager/shotmanager_logo.png",
     "categories": [
       "Plugin"
     ],
-    "media": [],
+    "media": [
+      {
+        "type": "image",
+        "url": "/integrations/shotmanager/shotmanager_screenshot_1.png",
+        "isHero": true
+      }
+    ],
     "url": "https://github.com/ubisoft/shotmanager"
   },
   {
@@ -464,12 +616,18 @@
     "name": "tlRender",
     "description": "Open source library for building playback and review applications for VFX, film, and animation",
     "company": "Darby Johnson",
-    "logo": "",
+    "logo": "/integrations/tlrender/tlrender_logo.png",
     "categories": [
       "Player",
       "Library"
     ],
-    "media": [],
+    "media": [
+      {
+        "type": "image",
+        "url": "/integrations/tlrender/tlrender_screenshot_1.png",
+        "isHero": true
+      }
+    ],
     "url": "https://github.com/darbyjohnston/tlRender"
   },
   {
@@ -478,11 +636,17 @@
     "name": "toucan",
     "description": "Experimental offline renderer for OTIO sequences",
     "company": "Darby Johnson",
-    "logo": "",
+    "logo": "/integrations/toucan/toucan_logo.png",
     "categories": [
       "Renderer"
     ],
-    "media": [],
+    "media": [
+      {
+        "type": "image",
+        "url": "/integrations/toucan/toucan_screenshot_1.png",
+        "isHero": true
+      }
+    ],
     "url": "https://github.com/darbyjohnston/toucan"
   },
   {
@@ -504,11 +668,17 @@
     "name": "Video Tracks",
     "description": "Blender Add-on from Ubisoft for video track management",
     "company": "Ubisoft",
-    "logo": "https://logo.clearbit.com/ubisoft.com",
+    "logo": "/integrations/videotracks/videotracks_logo.png",
     "categories": [
       "Plugin"
     ],
-    "media": [],
+    "media": [
+      {
+        "type": "image",
+        "url": "/integrations/videotracks/videotracks_screenshot_1.png",
+        "isHero": true
+      }
+    ],
     "url": "https://github.com/ubisoft/videotracks"
   }
 ]
