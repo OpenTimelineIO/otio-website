@@ -36,5 +36,3 @@ Join a collaborative community of developers and media professionals! Contribute
 ## Resources & Documentation
 Access the full [documentation](#), API references, and community forums to unlock OTIO’s full potential.
 
----
-
