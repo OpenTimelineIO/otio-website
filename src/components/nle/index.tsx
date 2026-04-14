@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { KeyboardShortcutDisplay } from "@/components/nle/keyboard-shortcut-display";
 import { ScrollContext } from "@/components/nle/scroll-context";
 import { TimelineTicks } from "@/components/nle/timeline-ticks";
-import { Play, Pause, FastForward, Rewind, Monitor, Eye, ZoomIn, ZoomOut } from "lucide-react";
+import { Play, Pause, FastForward, Rewind, Monitor, Eye, ZoomIn, ZoomOut, Heading1, Heading2, Heading3, Image, AlignLeft, List, Video } from "lucide-react";
 import { ContentRenderer } from "@/components/nle/content-renderer";
 import { Sequence } from "@/components/nle/sequence";
 import { SequenceSelector } from "@/components/nle/sequence-selector";
@@ -19,7 +19,6 @@ import "@/styles/nle.css";
 const EditorialInterfaceComponent = ({ markdown }: { markdown: string }) => {
   const [scrollPercentage, setScrollPercentage] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [playheadPosition, setPlayheadPosition] = useState(0);
   const [isScrolling, setIsScrolling] = useState(false);
   const [ffwState, setFfwState] = useState(false);
   const [rewindState, setRewindState] = useState(false);
@@ -94,6 +93,11 @@ const EditorialInterfaceComponent = ({ markdown }: { markdown: string }) => {
       setZoomLevel(minZoomLevel);
     }
   }, [minZoomLevel, zoomLevel]);
+
+  // Derive playhead position from scroll percentage and calculated timeline width.
+  // Uses calculatedTimelineWidth (computed synchronously from state) instead of
+  // timelineWidth (updated async by ResizeObserver) to stay in sync after zoom changes.
+  const playheadPosition = scrollPercentage * calculatedTimelineWidth;
 
   const verticalSectionRef = useRef<HTMLDivElement>(null);
   const playButtonRef = useRef<HTMLButtonElement>(null);
@@ -206,17 +210,6 @@ const EditorialInterfaceComponent = ({ markdown }: { markdown: string }) => {
   //   };
   // }, [handleScroll]);
 
-  // Update the playhead position and height calculation
-  // Separate concerns: ResizeObserver for size changes, effect for position updates
-  useEffect(() => {
-    if (timelineWrapperRef.current) {
-      const width = timelineWrapperRef.current.scrollWidth;
-      const position = scrollPercentage * width;
-      setPlayheadPosition(position);
-      setTimelineWidth(width);
-    }
-  }, [scrollPercentage, zoomLevel]);
-
   // ResizeObserver - track both scroll width (content) and client width (viewport)
   useEffect(() => {
     const updateTimelineDimensions = () => {
@@ -253,13 +246,7 @@ const EditorialInterfaceComponent = ({ markdown }: { markdown: string }) => {
     setIsPlaying(false);
     setFfwState(false);
     setRewindState(false);
-    
-    if (!timelineWrapperRef.current) return;
-    
-    // Update playhead position
-    const timelineWidth = timelineWrapperRef.current.scrollWidth;
-    const newPosition = percentage * timelineWidth;
-    setPlayheadPosition(newPosition);
+
     setScrollPercentage(percentage);
   }, []);
 
@@ -310,43 +297,75 @@ const EditorialInterfaceComponent = ({ markdown }: { markdown: string }) => {
     }
   }, []);
 
-  const handlePlayheadDrag = useCallback((e: any, data: { x: number }) => {
+  const handlePlayheadDrag = useCallback((e: any) => {
     setIsPlaying(false);
     setFfwState(false);
     setRewindState(false);
 
     if (!timelineWrapperRef.current) return;
 
-    const timelineWidth = timelineWrapperRef.current.scrollWidth;
-    const maxX = timelineWidth - 2;
-    const clampedX = Math.max(0, Math.min(maxX, data.x));
-    const newPercentage = clampedX / timelineWidth;
+    // Compute position directly from the mouse event relative to the timeline wrapper,
+    // bypassing react-draggable's internal coordinate tracking which can drift.
+    const wrapperRect = timelineWrapperRef.current.getBoundingClientRect();
+    const posInContent = e.clientX - wrapperRect.left + timelineWrapperRef.current.scrollLeft;
+    const newPercentage = Math.max(0, Math.min(1, posInContent / calculatedTimelineWidth));
 
-    setPlayheadPosition(clampedX);
     setScrollPercentage(newPercentage);
 
-    // Auto-scroll timeline if playhead is dragged near the left edge
+    // Auto-scroll timeline if playhead is dragged near edges
     const viewportWidth = timelineWrapperRef.current.clientWidth;
     const currentScrollLeft = timelineWrapperRef.current.scrollLeft;
-    const playheadVisualPosition = clampedX - currentScrollLeft;
-    
-    // If playhead is too close to left edge (within 50px), scroll left
+    const playheadVisualPosition = posInContent - currentScrollLeft;
+
     if (playheadVisualPosition < 50 && currentScrollLeft > 0) {
-      const newScrollLeft = Math.max(0, clampedX - 100); // Keep playhead 100px from edge
+      const newScrollLeft = Math.max(0, posInContent - 100);
+      timelineWrapperRef.current.scrollLeft = newScrollLeft;
+      if (timelineTicksRef.current) {
+        timelineTicksRef.current.scrollLeft = newScrollLeft;
+      }
+    } else if (playheadVisualPosition > viewportWidth - 50) {
+      const newScrollLeft = posInContent - viewportWidth + 100;
       timelineWrapperRef.current.scrollLeft = newScrollLeft;
       if (timelineTicksRef.current) {
         timelineTicksRef.current.scrollLeft = newScrollLeft;
       }
     }
-    // If playhead is too close to right edge, scroll right
-    else if (playheadVisualPosition > viewportWidth - 50) {
-      const newScrollLeft = clampedX - viewportWidth + 100;
-      timelineWrapperRef.current.scrollLeft = newScrollLeft;
-      if (timelineTicksRef.current) {
-        timelineTicksRef.current.scrollLeft = newScrollLeft;
-      }
-    }
-  }, []);
+  }, [calculatedTimelineWidth]);
+
+  // Handle click-to-snap on the timeline track area: snap playhead on mousedown,
+  // then follow through with drag via document-level mousemove/mouseup.
+  const handleTimelineMouseDown = useCallback((e: React.MouseEvent) => {
+    // Only handle left clicks, and ignore clicks on the playhead itself
+    if (e.button !== 0) return;
+    if (playheadRef.current && playheadRef.current.contains(e.target as Node)) return;
+
+    e.preventDefault();
+    setIsPlaying(false);
+    setFfwState(false);
+    setRewindState(false);
+
+    if (!timelineWrapperRef.current) return;
+
+    const computePercentage = (clientX: number) => {
+      const wrapperRect = timelineWrapperRef.current!.getBoundingClientRect();
+      const posInContent = clientX - wrapperRect.left + timelineWrapperRef.current!.scrollLeft;
+      return Math.max(0, Math.min(1, posInContent / calculatedTimelineWidth));
+    };
+
+    // Snap to click position immediately
+    setScrollPercentage(computePercentage(e.clientX));
+
+    const onMouseMove = (moveEvent: MouseEvent) => {
+      setScrollPercentage(computePercentage(moveEvent.clientX));
+    };
+    const onMouseUp = () => {
+      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseup", onMouseUp);
+    };
+
+    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseup", onMouseUp);
+  }, [calculatedTimelineWidth]);
 
   // Update keyboard shortcuts
   useEffect(() => {
@@ -539,12 +558,13 @@ const EditorialInterfaceComponent = ({ markdown }: { markdown: string }) => {
       const deltaTime = (timestamp - lastTimestamp) / 1000;
       lastTimestamp = timestamp;
 
+      let hitBounds = false;
+
       setScrollPercentage((prev) => {
         let newPercentage = prev;
         const speedMultiplier = getSpeedMultiplier();
 
         if (isPlaying) {
-          // Use actual delta time instead of hardcoded 1/60
           newPercentage += percentagePerSecond * deltaTime;
         } else if (ffwState) {
           newPercentage += (percentagePerSecond * speedMultiplier) * deltaTime;
@@ -557,18 +577,20 @@ const EditorialInterfaceComponent = ({ markdown }: { markdown: string }) => {
         // Clamp between 0 and 1
         newPercentage = Math.max(0, Math.min(1, newPercentage));
 
-        // Stop playing if we hit the bounds
         if (newPercentage >= 1 || newPercentage <= 0) {
-          // Schedule state updates for the next batch to avoid infinite loop
-          Promise.resolve().then(() => {
-            setIsPlaying(false);
-            setFfwState(false);
-            setRewindState(false);
-          });
+          hitBounds = true;
         }
 
         return newPercentage;
       });
+
+      // Stop playback outside the updater to avoid cascading state updates
+      if (hitBounds) {
+        setIsPlaying(false);
+        setFfwState(false);
+        setRewindState(false);
+        return; // Don't schedule next frame
+      }
 
       animationId = requestAnimationFrame(animate);
     };
@@ -612,10 +634,10 @@ const EditorialInterfaceComponent = ({ markdown }: { markdown: string }) => {
                 }}
               />
             </div> */}
-            <ContentRenderer 
-              markdown={markdown} 
+            <ContentRenderer
+              markdown={markdown}
               sections={sections}
-              currentTimeMs={percentageToMs(scrollPercentage, totalDuration)}
+              currentTimeMs={0}
               syncWithPlayhead={false}
             />
           </div>
@@ -630,15 +652,14 @@ const EditorialInterfaceComponent = ({ markdown }: { markdown: string }) => {
           />
           <div className="transportControls">
             <div className="flex justify-start items-center">
-              <div className="font-mono text-sm bg-muted px-3 py-1 rounded inline-block">
+              <div className="timecodeDisplay">
                 {getTimecodeFromScroll(scrollPercentage)}
               </div>
             </div>
             <div className="playbackControlsButtonWrapper">
               <Button
                 className="playbackControlButton"
-                variant="outline"
-                size="icon"
+                variant="ghost"
                 onClick={() => {
                   scrollPlayheadIntoView();
                   setIsPlaying(false);
@@ -651,21 +672,14 @@ const EditorialInterfaceComponent = ({ markdown }: { markdown: string }) => {
                     setRewindSpeedLevel(1);
                   }
                 }}
-                style={{
-                  outline: 0,
-                  backgroundColor: rewindState
-                    ? "rgba(59, 130, 246, 0.2)"
-                    : "transparent",
-                }}
+                data-active={rewindState ? "true" : undefined}
               >
-                {/* {rewindState ? `Rewind ${Math.pow(2, rewindSpeedLevel)}x` : 'Rewind'} */}
-                <Rewind />
+                <Rewind size={15} />
               </Button>
               <Button
                 ref={playButtonRef}
                 className="playbackControlButton"
-                variant="outline"
-                size="icon"
+                variant="ghost"
                 onClick={() => {
                   if (ffwState || rewindState) {
                     scrollPlayheadIntoView();
@@ -675,27 +689,19 @@ const EditorialInterfaceComponent = ({ markdown }: { markdown: string }) => {
                   } else {
                     setIsPlaying((prev) => {
                       if (!prev) {
-                        // About to start playing, ensure playhead is visible
                         scrollPlayheadIntoView();
                       }
                       return !prev;
                     });
                   }
                 }}
-                style={{
-                  outline: 0,
-                  backgroundColor: isPlaying
-                    ? "rgba(59, 130, 246, 0.2)"
-                    : "transparent",
-                }}
+                data-active={isPlaying ? "true" : undefined}
               >
-                {/* {isPlaying ? 'Pause' : 'Play'} */}
-                {isPlaying ? <Pause /> : <Play />}
+                {isPlaying ? <Pause size={15} /> : <Play size={15} />}
               </Button>
               <Button
                 className="playbackControlButton"
-                variant="outline"
-                size="icon"
+                variant="ghost"
                 onClick={() => {
                   scrollPlayheadIntoView();
                   setIsPlaying(false);
@@ -708,15 +714,9 @@ const EditorialInterfaceComponent = ({ markdown }: { markdown: string }) => {
                     setFfwSpeedLevel(1);
                   }
                 }}
-                style={{
-                  outline: 0,
-                  backgroundColor: ffwState
-                    ? "rgba(59, 130, 246, 0.2)"
-                    : "transparent",
-                }}
+                data-active={ffwState ? "true" : undefined}
               >
-                {/* {ffwState ? `Fast Forward ${Math.pow(2, ffwSpeedLevel)}x` : 'Fast Forward'} */}
-                <FastForward />
+                <FastForward size={15} />
               </Button>
             </div>
             <div className="transportControlsRight">
@@ -733,7 +733,7 @@ const EditorialInterfaceComponent = ({ markdown }: { markdown: string }) => {
                   <ZoomOut size={14} />
                 </Button>
                 <button
-                  className="text-xs mx-2 min-w-12 text-center hover:underline cursor-pointer"
+                  className="text-xs mx-1 min-w-10 text-center hover:underline cursor-pointer"
                   onClick={() => setConstrainedZoom(1)}
                   title="Reset Zoom (100%)"
                 >
@@ -750,7 +750,7 @@ const EditorialInterfaceComponent = ({ markdown }: { markdown: string }) => {
                   <ZoomIn size={14} />
                 </Button>
               </div>
-              <div className="font-mono text-sm bg-muted px-3 py-1 rounded inline-block">
+              <div className="timecodeDisplay">
                 {getTimelineDurationTimecode()}
               </div>
             </div>
@@ -794,80 +794,52 @@ const EditorialInterfaceComponent = ({ markdown }: { markdown: string }) => {
               {/* Fixed track headers column */}
               <div className="track-headers-fixed">
                 <div className="track-header">
-                  <div className="track-label" data-track="h1">{"<h1>"}</div>
+                  <div className="track-label" data-track="h1"><Heading1 size={14} strokeWidth={2} /></div>
                   <div className="track-controls">
-                    <button>
-                      <Monitor size={16} />
-                    </button>
-                    <button>
-                      <Eye size={16} />
-                    </button>
+                    <button><Monitor size={14} /></button>
+                    <button><Eye size={14} /></button>
                   </div>
                 </div>
                 <div className="track-header">
-                  <div className="track-label" data-track="h2">{"<h2>"}</div>
+                  <div className="track-label" data-track="h2"><Heading2 size={14} strokeWidth={2} /></div>
                   <div className="track-controls">
-                    <button>
-                      <Monitor size={16} />
-                    </button>
-                    <button>
-                      <Eye size={16} />
-                    </button>
+                    <button><Monitor size={14} /></button>
+                    <button><Eye size={14} /></button>
                   </div>
                 </div>
                 <div className="track-header">
-                  <div className="track-label" data-track="h3">{"<h3>"}</div>
+                  <div className="track-label" data-track="h3"><Heading3 size={14} strokeWidth={2} /></div>
                   <div className="track-controls">
-                    <button>
-                      <Monitor size={16} />
-                    </button>
-                    <button>
-                      <Eye size={16} />
-                    </button>
+                    <button><Monitor size={14} /></button>
+                    <button><Eye size={14} /></button>
                   </div>
                 </div>
                 <div className="track-header">
-                  <div className="track-label" data-track="img">{"<img>"}</div>
+                  <div className="track-label" data-track="img"><Image size={14} strokeWidth={2} /></div>
                   <div className="track-controls">
-                    <button>
-                      <Monitor size={16} />
-                    </button>
-                    <button>
-                      <Eye size={16} />
-                    </button>
+                    <button><Monitor size={14} /></button>
+                    <button><Eye size={14} /></button>
                   </div>
                 </div>
                 <div className="track-header">
-                  <div className="track-label" data-track="p">{"<p>"}</div>
+                  <div className="track-label" data-track="p"><AlignLeft size={14} strokeWidth={2} /></div>
                   <div className="track-controls">
-                    <button>
-                      <Monitor size={16} />
-                    </button>
-                    <button>
-                      <Eye size={16} />
-                    </button>
+                    <button><Monitor size={14} /></button>
+                    <button><Eye size={14} /></button>
                   </div>
                 </div>
                 <div className="track-header">
-                  <div className="track-label" data-track="ul">{"<ul>"}</div>
+                  <div className="track-label" data-track="ul"><List size={14} strokeWidth={2} /></div>
                   <div className="track-controls">
-                    <button>
-                      <Monitor size={16} />
-                    </button>
-                    <button>
-                      <Eye size={16} />
-                    </button>
+                    <button><Monitor size={14} /></button>
+                    <button><Eye size={14} /></button>
                   </div>
                 </div>
                 <div className="track-header">
-                  <div className="track-label" data-track="embed">{"<vid>"}</div>
+                  <div className="track-label" data-track="embed"><Video size={14} strokeWidth={2} /></div>
                   <div className="track-controls">
-                    <button>
-                      <Monitor size={16} />
-                    </button>
-                    <button>
-                      <Eye size={16} />
-                    </button>
+                    <button><Monitor size={14} /></button>
+                    <button><Eye size={14} /></button>
                   </div>
                 </div>
               </div>
@@ -877,6 +849,7 @@ const EditorialInterfaceComponent = ({ markdown }: { markdown: string }) => {
                 id="timelineWrapper"
                 ref={timelineWrapperRef}
                 className="timelineWrapper"
+                onMouseDown={handleTimelineMouseDown}
                 onScroll={(e) => {
                   // Sync timeline scroll with ticks
                   if (timelineTicksRef.current) {
@@ -892,15 +865,14 @@ const EditorialInterfaceComponent = ({ markdown }: { markdown: string }) => {
 
             {/* Playhead - positioned absolutely over the entire timeline */}
             <Draggable
+              key={calculatedTimelineWidth}
               nodeRef={playheadRef}
               axis="x"
               position={{ x: playheadPosition, y: 0 }}
               onDrag={handlePlayheadDrag}
               bounds={{
                 left: 0,
-                right: timelineWrapperRef.current
-                  ? timelineWrapperRef.current.scrollWidth - 2
-                  : 0,
+                right: calculatedTimelineWidth - 2,
               }}
             >
               <div
