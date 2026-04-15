@@ -6,7 +6,7 @@ import { Root, Content, Heading, Paragraph, Image, Text, List } from "mdast";
  * Element extracted from markdown AST
  */
 export interface ParsedElement {
-  type: "h1" | "h2" | "h3" | "p" | "img" | "embed" | "ul";
+  type: "h1" | "h2" | "h3" | "p" | "img" | "embed" | "ul" | "widget";
   content: string;
   node: Content;
   imageUrl?: string;
@@ -14,6 +14,7 @@ export interface ParsedElement {
   embedUrl?: string;
   embedType?: "youtube";
   listItems?: string[];
+  widgetName?: string;
 }
 
 /**
@@ -33,8 +34,8 @@ export interface TrackItem {
   id: string;
   content: string;
   name: string;
-  track: number; // 0 = h1, 1 = h2, 2 = h3, 3 = img, 4 = p, 5 = embed, 6 = ul
-  type: "h1" | "h2" | "h3" | "img" | "p" | "embed" | "ul";
+  track: number; // 0 = h1, 1 = h2, 2 = h3, 3 = media (img/embed/widget), 4 = p, 5 = ul
+  type: "h1" | "h2" | "h3" | "img" | "p" | "embed" | "ul" | "widget";
   start: number; // milliseconds
   end: number; // milliseconds
   node?: Content; // AST node reference
@@ -43,17 +44,19 @@ export interface TrackItem {
   embedUrl?: string;
   embedType?: "youtube";
   listItems?: string[];
+  widgetName?: string;
 }
 
-// Track mapping: h1=0, h2=1, h3=2, img=3, p=4, embed=5, ul=6
+// Track mapping: h1=0, h2=1, h3=2, media=3 (img/embed/widget), p=4, ul=5
 const TRACK_MAP: Record<string, number> = {
   h1: 0,
   h2: 1,
   h3: 2,
   img: 3,
+  embed: 3,
+  widget: 3,
   p: 4,
   ul: 5,
-  embed: 6,
 };
 
 /**
@@ -142,6 +145,21 @@ function extractYouTubeEmbed(node: Content): ParsedElement | null {
  * Parse markdown AST node to ParsedElement
  */
 function parseNode(node: Content): ParsedElement | null {
+  // Detect HTML nodes with data-component attribute (widget markers)
+  if (node.type === "html") {
+    const htmlNode = node as any;
+    const value = (htmlNode.value || "") as string;
+    const match = value.match(/data-component="([^"]+)"/);
+    if (match) {
+      return {
+        type: "widget",
+        content: match[1],
+        node,
+        widgetName: match[1],
+      };
+    }
+  }
+
   if (node.type === "heading") {
     const heading = node as Heading;
     const level = heading.depth;
@@ -231,8 +249,10 @@ function calculateSectionDuration(section: Section): number {
   const imageTime = section.elements.filter((e) => e.type === "img").length * 3000;
   // Embeds add extra time (10 seconds per embed for video preview)
   const embedTime = section.elements.filter((e) => e.type === "embed").length * 10000;
+  // Widgets add 5 seconds each
+  const widgetTime = section.elements.filter((e) => e.type === "widget").length * 5000;
 
-  return Math.max(minDuration, readingTime + imageTime + embedTime);
+  return Math.max(minDuration, readingTime + imageTime + embedTime + widgetTime);
 }
 
 /**
@@ -408,6 +428,8 @@ export function generateClipsFromSections(sections: Section[]): TrackItem[] {
               ? element.alt || "Image"
               : element.type === "embed"
               ? element.content || "Embed"
+              : element.type === "widget"
+              ? element.widgetName || "Widget"
               : element.type === "ul"
               ? `List (${element.listItems?.length || 0} items)`
               : element.content.substring(0, 30) + (element.content.length > 30 ? "..." : ""),
@@ -421,6 +443,7 @@ export function generateClipsFromSections(sections: Section[]): TrackItem[] {
           embedUrl: element.embedUrl,
           embedType: element.embedType,
           listItems: element.listItems,
+          widgetName: element.widgetName,
         });
       }
     }

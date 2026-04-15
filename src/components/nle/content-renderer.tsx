@@ -1,9 +1,14 @@
 import { useState, useMemo, memo } from "react";
 import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { Card } from "@/components/ui/card";
 import { Section } from "@/components/nle/utils/markdown-parser";
+import { Integration } from "@/types/integrations";
+import { FeatureCards } from "@/components/homepage/feature-cards";
+import { IntegrationGrid } from "@/components/homepage/integration-grid";
+import { CommunityCta } from "@/components/homepage/community-cta";
 
 interface ContentRendererProps {
   markdown: string;
@@ -11,6 +16,7 @@ interface ContentRendererProps {
   sections?: Section[];
   currentTimeMs?: number;
   syncWithPlayhead?: boolean;
+  integrations?: Integration[];
 }
 
 // Memoize ContentRenderer to prevent unnecessary re-renders
@@ -20,6 +26,7 @@ export const ContentRenderer = memo(function ContentRenderer({
   sections = [],
   currentTimeMs = 0,
   syncWithPlayhead = false,
+  integrations = [],
 }: ContentRendererProps) {
   const [ast, setAst] = useState<any>(null);
 
@@ -178,6 +185,11 @@ export const ContentRenderer = memo(function ContentRenderer({
                       ))}
                     </ul>
                   );
+                } else if (element.type === "widget" && element.widgetName) {
+                  if (element.widgetName === "feature-cards") return <FeatureCards key={elemIndex} />;
+                  if (element.widgetName === "integration-grid") return <IntegrationGrid key={elemIndex} integrations={integrations} />;
+                  if (element.widgetName === "community-cta") return <CommunityCta key={elemIndex} />;
+                  return null;
                 } else if (element.type.startsWith("h")) {
                   const level = parseInt(element.type[1]);
                   const HeadingTag = `h${level}` as keyof JSX.IntrinsicElements;
@@ -274,6 +286,13 @@ export const ContentRenderer = memo(function ContentRenderer({
             // Regular link - YouTube links are handled at the paragraph level
             return <a href={href} className="text-primary underline hover:no-underline" {...props}>{children}</a>;
           },
+          div: ({ node, ...props }: any) => {
+            const component = props["data-component"];
+            if (component === "feature-cards") return <FeatureCards />;
+            if (component === "integration-grid") return <IntegrationGrid integrations={integrations} />;
+            if (component === "community-cta") return <CommunityCta />;
+            return <div {...props} />;
+          },
           code: ({ className, children, ...props }) => {
             const match = /language-(\w+)/.exec(className || "");
             return match ? (
@@ -295,6 +314,7 @@ export const ContentRenderer = memo(function ContentRenderer({
           },
         }}
         remarkPlugins={[]}
+        rehypePlugins={[rehypeRaw]}
       >
         {cleanMarkdown}
       </ReactMarkdown>
