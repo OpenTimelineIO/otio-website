@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { EditorialInterfaceComponent } from "@/components/nle/index";
 import { NavWidthSetter } from "@/components/layout/nav-width-setter";
 import { getSiteUrl } from "@/lib/site-config";
+import { getIntegrations } from "@/lib/integrations";
 import { promises as fs } from "fs";
 import path from "path";
 
@@ -30,10 +31,11 @@ export const metadata: Metadata = {
 
 export default async function NonLinearEditor() {
   const markdown = await getMarkdownContent();
+  const integrations = getIntegrations().filter((i) => i.logo);
 
   return (
     <NavWidthSetter width="full">
-      <EditorialInterfaceComponent markdown={markdown} />
+      <EditorialInterfaceComponent markdown={markdown} integrations={integrations} />
     </NavWidthSetter>
   );
 }

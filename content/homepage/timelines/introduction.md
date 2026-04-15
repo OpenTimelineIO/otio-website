@@ -4,37 +4,31 @@ framerate: 24
 ---
 # OpenTimelineIO
 
-## Bridging Editorial Workflows Across Platforms
-**An open-source API and interchange format for managing timeline data in media production pipelines.**
+## Bridging Editorial Workflows
+**The open-source interchange format for editorial timeline data in film, animation, and VFX.**
 
 <!-- -->
 
-### What is OpenTimelineIO?
-OpenTimelineIO (OTIO) is an open-source tool built for managing and exchanging editorial timeline data across a variety of editing tools and media formats, enabling seamless data interchange in film, animation, and VFX production.
+### About OpenTimelineIO
+A format and API for exchanging editorial timeline data between tools — enabling seamless workflows across editing, compositing, and review applications.
 
 [Intro Video](https://www.youtube.com/watch?v=nb6MELswKKk)
 
 <!-- -->
 
 ## Key Features
-- **Interchange Format**: Effortlessly exchange timeline data across platforms.
-- **Python & C++ Integrations**: Robust support for developers.
-- **Adaptable**: Custom adapters for flexible workflows.
+
+<div data-component="feature-cards"></div>
 
 <!-- -->
 
-## OTIO Suporting Apps & Integrations
-OTIO integrates with popular editing and production tools, offering a streamlined data exchange solution in modern pipelines.
+## Apps & Integrations
+
+<div data-component="integration-grid"></div>
 
 <!-- -->
 
-## Community and Contribution
-Join a collaborative community of developers and media professionals! Contribute new adapters, offer support, and help shape the future of OTIO.
+## Get Involved
+Join developers and media professionals shaping the future of editorial interchange.
 
-<!-- -->
-
-## Resources & Documentation
-Access the full [documentation](#), API references, and community forums to unlock OTIO’s full potential.
-
----
-
+<div data-component="community-cta"></div>

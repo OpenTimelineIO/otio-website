@@ -14,9 +14,10 @@ import { Sequence } from "@/components/nle/sequence";
 import { SequenceSelector } from "@/components/nle/sequence-selector";
 import { parseMarkdownToClips } from "@/components/nle/utils/markdown-parser";
 import { msToFrames, percentageToMs } from "@/lib/time-utils";
+import { Integration } from "@/types/integrations";
 import "@/styles/nle.css";
 
-const EditorialInterfaceComponent = ({ markdown }: { markdown: string }) => {
+const EditorialInterfaceComponent = ({ markdown, integrations = [] }: { markdown: string; integrations?: Integration[] }) => {
   const [scrollPercentage, setScrollPercentage] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [playheadPosition, setPlayheadPosition] = useState(0);
@@ -226,9 +227,9 @@ const EditorialInterfaceComponent = ({ markdown }: { markdown: string }) => {
         setTimelineWidth(width);
         setContainerWidth(viewportWidth);
         
-        // Calculate playhead height: ticks (32px) + tracks (7 × 32px = 224px) = 256px
+        // Calculate playhead height: ticks (32px) + tracks (6 × 32px = 192px) = 224px
         const ticksHeight = 32;
-        const tracksHeight = 7 * 32;
+        const tracksHeight = 6 * 32;
         const totalHeight = ticksHeight + tracksHeight;
         setTimelineHeight(totalHeight);
       }
@@ -612,11 +613,12 @@ const EditorialInterfaceComponent = ({ markdown }: { markdown: string }) => {
                 }}
               />
             </div> */}
-            <ContentRenderer 
-              markdown={markdown} 
+            <ContentRenderer
+              markdown={markdown}
               sections={sections}
               currentTimeMs={percentageToMs(scrollPercentage, totalDuration)}
               syncWithPlayhead={false}
+              integrations={integrations}
             />
           </div>
           <KeyboardShortcutDisplay
@@ -827,7 +829,7 @@ const EditorialInterfaceComponent = ({ markdown }: { markdown: string }) => {
                   </div>
                 </div>
                 <div className="track-header">
-                  <div className="track-label" data-track="img">{"<img>"}</div>
+                  <div className="track-label" data-track="media">{"media"}</div>
                   <div className="track-controls">
                     <button>
                       <Monitor size={16} />
@@ -850,17 +852,6 @@ const EditorialInterfaceComponent = ({ markdown }: { markdown: string }) => {
                 </div>
                 <div className="track-header">
                   <div className="track-label" data-track="ul">{"<ul>"}</div>
-                  <div className="track-controls">
-                    <button>
-                      <Monitor size={16} />
-                    </button>
-                    <button>
-                      <Eye size={16} />
-                    </button>
-                  </div>
-                </div>
-                <div className="track-header">
-                  <div className="track-label" data-track="embed">{"<vid>"}</div>
                   <div className="track-controls">
                     <button>
                       <Monitor size={16} />

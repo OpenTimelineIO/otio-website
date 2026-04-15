@@ -262,8 +262,8 @@
   background: var(--track-label-h3);
 }
 
-.track-label[data-track="img"] {
-  background: var(--track-label-img);
+.track-label[data-track="media"] {
+  background: var(--track-label-media);
 }
 
 .track-label[data-track="p"] {
@@ -271,9 +271,6 @@
 }
 .track-label[data-track="ul"] {
   background: var(--track-label-ul);
-}
-.track-label[data-track="embed"] {
-  background: var(--track-label-embed);
 }
 
 .track-controls {

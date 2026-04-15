@@ -5,15 +5,14 @@ import { msToPercentage } from "@/lib/time-utils";
 import { useMemo, memo } from "react";
 import "@/styles/nle.css";
 
-// Track configuration: h1=0, h2=1, h3=2, img=3, p=4, embed=5, ul=6
+// Track configuration: h1=0, h2=1, h3=2, media=3, p=4, ul=5
 const TRACK_CONFIG = [
   { label: "<h1>", name: "Header 1", type: "h1" as const },
   { label: "<h2>", name: "Header 2", type: "h2" as const },
   { label: "<h3>", name: "Header 3", type: "h3" as const },
-  { label: "<img>", name: "Image", type: "img" as const },
+  { label: "media", name: "Media", type: "media" as const },
   { label: "<p>", name: "Paragraph", type: "p" as const },
   { label: "<ul>", name: "List", type: "ul" as const },
-  { label: "<embed>", name: "Embed", type: "embed" as const },
 ];
 
 interface ClipRendererProps {
@@ -49,6 +48,8 @@ const ClipRenderer = memo(({ item, totalDurationMs, timelineWidth }: ClipRendere
         return "bg-gradient-to-b from-red-200/90 to-red-300/90 border-red-400/80 text-red-900 dark:from-red-600/40 dark:to-red-600/20 dark:border-red-400/60 dark:text-red-50";
       case "ul":
         return "bg-gradient-to-b from-amber-200/90 to-amber-300/90 border-amber-400/80 text-amber-900 dark:from-amber-600/40 dark:to-amber-600/20 dark:border-amber-400/60 dark:text-amber-50";
+      case "widget":
+        return "bg-gradient-to-b from-emerald-200/90 to-emerald-300/90 border-emerald-400/80 text-emerald-900 dark:from-emerald-600/40 dark:to-emerald-600/20 dark:border-emerald-400/60 dark:text-emerald-50";
       default:
         return "bg-gradient-to-b from-gray-200/90 to-gray-300/90 border-gray-400/80 text-gray-900 dark:from-gray-600/40 dark:to-gray-600/20 dark:border-gray-400/60 dark:text-gray-50";
     }

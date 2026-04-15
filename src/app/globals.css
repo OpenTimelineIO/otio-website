@@ -189,14 +189,13 @@
     --track-height: 38px;
     --track-header-width: 120px;
 
-    /* Track label colors - light mode matching clip colors (blue-250, teal-250, violet-250, rose-250, slate-250) */
+    /* Track label colors - light mode matching clip colors */
     --track-label-h1: oklch(0.75 0.12 250); /* Blue - matches blue-200/300 gradient */
     --track-label-h2: oklch(0.75 0.10 180); /* Teal - matches teal-200/300 gradient */
     --track-label-h3: oklch(0.75 0.12 300); /* Violet - matches violet-200/300 gradient */
-    --track-label-img: oklch(0.75 0.10 15); /* Rose - matches rose-200/300 gradient */
+    --track-label-media: oklch(0.75 0.10 15); /* Rose - consolidated media track */
     --track-label-p: oklch(0.70 0.02 250); /* Slate - matches slate-200/300 gradient */
     --track-label-ul: oklch(0.75 0.12 85); /* Amber - matches amber-200/300 gradient */
-    --track-label-embed: oklch(0.75 0.15 25); /* Red - matches red-200/300 gradient */
     
     /* Track header background - light mode */
     --track-header-bg: oklch(0.85 0.01 240); /* Light gray-blue */
@@ -235,10 +234,9 @@
     --track-label-h1: oklch(0.50 0.15 250); /* Blue - matches dark mode blue-600/40-20 */
     --track-label-h2: oklch(0.50 0.12 180); /* Teal - matches dark mode teal-600/40-20 */
     --track-label-h3: oklch(0.50 0.15 300); /* Violet - matches dark mode violet-600/40-20 */
-    --track-label-img: oklch(0.50 0.12 15); /* Rose - matches dark mode rose-600/40-20 */
+    --track-label-media: oklch(0.50 0.12 15); /* Rose - consolidated media track */
     --track-label-p: oklch(0.45 0.08 250); /* Slate - matches dark mode slate-600/40-20 */
     --track-label-ul: oklch(0.50 0.15 85); /* Amber - matches dark mode amber-600/40-20 */
-    --track-label-embed: oklch(0.50 0.18 25); /* Red - matches dark mode red-600/40-20 */
     
     /* Track header background - dark mode */
     --track-header-bg: oklch(0.18 0.02 240); /* Darker gray-blue */
